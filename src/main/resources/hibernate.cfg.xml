@@ -1,0 +1,22 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/library-system</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.connection.password">doctorwho3210</property>
+
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="hibernate.show_sql">true</property>
+
+        <!-- Entities mapping will be added later -->
+        <mapping class="com.magicallibrary.app.modules.user.User" />
+        <mapping class="com.magicallibrary.app.modules.booktitle.BookTitle" />
+        <mapping class="com.magicallibrary.app.modules.bookcopy.BookCopy" />
+        <mapping class="com.magicallibrary.app.modules.borrow.Borrow" />
+        <mapping class="com.magicallibrary.app.modules.borrowbook.BorrowBook" />
+    </session-factory>
+</hibernate-configuration>
