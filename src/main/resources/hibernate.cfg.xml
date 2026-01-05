@@ -7,7 +7,7 @@
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
 
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.show_sql">false</property>
 
         <!-- Entities mapping will be added later -->
         <mapping class="com.magicallibrary.app.modules.user.User" />
