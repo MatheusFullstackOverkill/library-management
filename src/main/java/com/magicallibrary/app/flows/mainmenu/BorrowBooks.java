@@ -90,16 +90,22 @@ public class BorrowBooks extends InternalFlow {
             };
             System.out.println(String.format("%d. Create user", results.size() + 1));
 
-            int response = Integer.parseInt(getUserInput());
+            try {
+                int response = Integer.parseInt(getUserInput());
 
-            if (response > results.size() + 1 || response <= 0) {
+                if (response > results.size() + 1 || response <= 0) {
+                    System.out.println("Invalid choice");
+
+                    return searchCustomer();
+                } else if (response == results.size() + 1) {
+                    return createCustomer();
+                } {
+                    return results.get(response - 1);
+                }
+            } catch (Exception e) {
                 System.out.println("Invalid choice");
 
                 return searchCustomer();
-            } else if (response == results.size() + 1) {
-                return createCustomer();
-            } {
-                return results.get(response - 1);
             }
         }
     }

@@ -30,10 +30,22 @@ public class AddBookCopy extends InternalFlow {
                 1. Yes;
                 2. No;
             """);
-            Integer response = Integer.parseInt(getUserInput());
+            try {
+                Integer response = Integer.parseInt(getUserInput());
 
-            if (response == 1) {
-                return createBookTitle(name);
+                if (response == 1) {
+                    return createBookTitle(name);
+                };
+
+                if (response < 1 || response > 2) {
+                    System.out.println("Invalid choice");
+
+                    return validateBookTitle();
+                };
+            } catch (Exception e) {
+                System.out.println("Invalid choice");
+
+                return validateBookTitle();
             };
 
             return validateBookTitle();
