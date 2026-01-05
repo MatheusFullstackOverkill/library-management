@@ -13,9 +13,6 @@ public abstract class Repository {
     protected static <T> List<T> baseList(Class<T> listClass, QueryStringWrapper queryStringWrapper, HashMap<String, Object> params) {
         App.session.beginTransaction();
 
-        System.out.println(queryStringWrapper.queryString);
-        System.out.println(params);
-
         Query<T> resultsQuery = App.session.createQuery(queryStringWrapper.queryString, listClass);
 
         if (params != null) {

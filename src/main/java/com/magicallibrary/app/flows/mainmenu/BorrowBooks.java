@@ -7,10 +7,12 @@ import java.util.List;
 import com.magicallibrary.app.App;
 import com.magicallibrary.app.modules.bookcopy.BookCopy;
 import com.magicallibrary.app.modules.bookcopy.BookCopyRepository;
+import com.magicallibrary.app.modules.bookcopy.BookCopyStatus;
 import com.magicallibrary.app.modules.booktitle.BookTitle;
 import com.magicallibrary.app.modules.booktitle.BookTitleRepository;
 import com.magicallibrary.app.modules.borrow.Borrow;
 import com.magicallibrary.app.modules.borrow.BorrowRepository;
+import com.magicallibrary.app.modules.borrow.BorrowStatus;
 import com.magicallibrary.app.modules.borrowbook.BorrowBook;
 import com.magicallibrary.app.modules.borrowbook.BorrowBookRepository;
 import com.magicallibrary.app.modules.user.User;
@@ -21,6 +23,7 @@ public class BorrowBooks extends InternalFlow {
 
     private boolean searchBookTitles() {
         System.out.println("Book's Title:");
+        System.out.println("Enter 'end' to finish selecting books");
         String name = getUserInput();
         if (name == null) {
             return true;
@@ -41,9 +44,17 @@ public class BorrowBooks extends InternalFlow {
 
             return searchBookTitles();
         } else {
+            for (int i = 0; i < selectedBookTitlesCopies.size(); i++) {
+                if (results.stream().map(x -> x.getId()).toList().contains(selectedBookTitlesCopies.get(i).getBookTitleId())) {
+                    System.out.println("A copy of this book was already selected");
+
+                    return searchBookTitles();
+                };
+            };
+            
             HashMap<String, Object> bookCopiesParams = new HashMap<String, Object>() {{
                 put("bookTitleId", results.getFirst().getId());
-                put("status", "available");
+                put("status", BookCopyStatus.AVAILABLE.getValue());
             }};
 
             List<BookCopy> bookCopiesResults = BookCopyRepository.list(bookCopiesParams);
@@ -135,19 +146,25 @@ public class BorrowBooks extends InternalFlow {
             return true;
         };
 
+        if (selectedBookTitlesCopies.size() == 0) {
+            System.out.println("You have not selected any books, exiting process.");
+
+            return true;
+        };
+
         // search customer by name or email;
         // create one if don't find it;
         // create borrow and loop through BookCopies and create BorrowBook with status as "borrowed";
         User customer = searchCustomer();
 
-        Borrow newBorrow = new Borrow(customer.getId(), App.currentUser.getId(), "all_books_borrowed");
+        Borrow newBorrow = new Borrow(customer.getId(), App.currentUser.getId(), BorrowStatus.ALL_BOOKS_BORROWED.getValue());
         Borrow newCreatedBorrow = BorrowRepository.create(newBorrow);
 
         for (int i = 0; i < selectedBookTitlesCopies.size(); i++) {
             BorrowBookRepository.create(new BorrowBook(newCreatedBorrow.getId(), selectedBookTitlesCopies.get(i).getBookCopyId()));
 
             BookCopy bookCopy = BookCopyRepository.retrieve(selectedBookTitlesCopies.get(i).getBookCopyId());
-            bookCopy.setStatus("borrowed");
+            bookCopy.setStatus(BookCopyStatus.BORROWED.getValue());
             BookCopyRepository.update(bookCopy);
         };
 

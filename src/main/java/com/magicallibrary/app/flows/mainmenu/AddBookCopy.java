@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.magicallibrary.app.modules.bookcopy.BookCopy;
 import com.magicallibrary.app.modules.bookcopy.BookCopyRepository;
+import com.magicallibrary.app.modules.bookcopy.BookCopyStatus;
 import com.magicallibrary.app.modules.booktitle.BookTitle;
 import com.magicallibrary.app.modules.booktitle.BookTitleRepository;
 
@@ -69,7 +70,7 @@ public class AddBookCopy extends InternalFlow {
             return true;
         };
 
-        BookCopyRepository.create(new BookCopy(bookTitle.getId(), "available"));
+        BookCopyRepository.create(new BookCopy(bookTitle.getId(), BookCopyStatus.AVAILABLE.getValue()));
         System.out.println("Book Copy successfully created!");
 
         return true;

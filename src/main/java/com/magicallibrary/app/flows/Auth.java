@@ -16,6 +16,7 @@ public class Auth {
 
         System.out.println("Email:");
         email = App.scanner.nextLine();
+        System.out.println();
 
         if (email.length() > 0) {
             emailValidated = true;
@@ -40,6 +41,7 @@ public class Auth {
 
         System.out.println("Password:");
         password = App.scanner.nextLine();
+        System.out.println();
 
         if (password.length() > 0) {
             passwordValidated = true;

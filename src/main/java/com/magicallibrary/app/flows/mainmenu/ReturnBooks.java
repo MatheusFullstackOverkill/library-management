@@ -5,8 +5,10 @@ import java.util.List;
 
 import com.magicallibrary.app.modules.bookcopy.BookCopy;
 import com.magicallibrary.app.modules.bookcopy.BookCopyRepository;
+import com.magicallibrary.app.modules.bookcopy.BookCopyStatus;
 import com.magicallibrary.app.modules.borrow.Borrow;
 import com.magicallibrary.app.modules.borrow.BorrowRepository;
+import com.magicallibrary.app.modules.borrow.BorrowStatus;
 import com.magicallibrary.app.modules.borrowbook.BorrowBookRepository;
 import com.magicallibrary.app.modules.borrowbook.BorrowBookWithTitle;
 import com.magicallibrary.app.modules.user.User;
@@ -21,7 +23,7 @@ public class ReturnBooks extends InternalFlow {
 
         HashMap<String, Object> searchParams = new HashMap<String, Object>() {{
             put("customerSearch", name);
-            put("notStatus", "all_books_returned");
+            put("notStatus", BorrowStatus.ALL_BOOKS_RETURNED.getValue());
         }};
 
         List<Object[]> results = BorrowRepository.list(searchParams);
@@ -74,7 +76,7 @@ public class ReturnBooks extends InternalFlow {
     private boolean returnBooks(Borrow borrow) {
         HashMap<String, Object> bookCopiesParams = new HashMap<String, Object>() {{
             put("borrowId", borrow.getId());
-            put("status", "borrowed");
+            put("status", BookCopyStatus.BORROWED.getValue());
         }};
 
         List<BorrowBookWithTitle> bookCopies = BorrowBookRepository.list(bookCopiesParams);
@@ -105,13 +107,13 @@ public class ReturnBooks extends InternalFlow {
                 return returnBooks(borrow);
             } {
                 BookCopy bookCopy = BookCopyRepository.retrieve(bookCopies.get(response - 1).bookCopyId);
-                bookCopy.setStatus("available");
+                bookCopy.setStatus(BookCopyStatus.AVAILABLE.getValue());
                 BookCopyRepository.update(bookCopy);
 
                 System.out.println("Book returned!");
 
                 if (bookCopies.size() - 1 <= 0) {
-                    borrow.setStatus("all_books_returned");
+                    borrow.setStatus(BorrowStatus.ALL_BOOKS_RETURNED.getValue());
                     BorrowRepository.update(borrow);
 
                     System.out.println("All books have been returned!");
@@ -119,7 +121,7 @@ public class ReturnBooks extends InternalFlow {
                     return true;
                 };
 
-                borrow.setStatus("some_books_returned");
+                borrow.setStatus(BorrowStatus.SOME_BOOKS_BORROWED.getValue());
                 BorrowRepository.update(borrow);
 
                 return returnBooks(borrow);
