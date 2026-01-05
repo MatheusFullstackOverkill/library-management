@@ -16,6 +16,7 @@ import com.magicallibrary.app.modules.user.exceptions.TooManyLoginAttemptsExcept
  * Hello world!
  */
 public class App {
+    public static final EnvConfig env = new EnvConfig();
     public static final Scanner scanner = new Scanner(System.in);
     // BufferedReader is another option to get user input, I choose to use this instead of Scanner
     // because Scanner a problem of not waiting for user's input sometimes, and by using BufferedReader I solved that.

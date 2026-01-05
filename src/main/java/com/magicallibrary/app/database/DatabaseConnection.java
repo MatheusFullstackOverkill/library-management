@@ -4,9 +4,16 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import com.magicallibrary.app.App;
+
 public class DatabaseConnection {
     public static Session hibernateSetup() {
-        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        Configuration configuration = new Configuration();
+        configuration.setProperty("hibernate.connection.url", App.env.getEnv("DATABASE_URL"));
+        configuration.setProperty("hibernate.connection.username", App.env.getEnv("DATABASE_USER"));
+        configuration.setProperty("hibernate.connection.password", App.env.getEnv("DATABASE_PASSWORD"));
+
+        SessionFactory sessionFactory = configuration.configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
 
         System.out.println("Hibernate setup successfully!");
