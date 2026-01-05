@@ -3,7 +3,6 @@ package com.magicallibrary.app.flows.mainmenu;
 import java.util.HashMap;
 import java.util.List;
 
-import com.magicallibrary.app.App;
 import com.magicallibrary.app.modules.bookcopy.BookCopy;
 import com.magicallibrary.app.modules.bookcopy.BookCopyRepository;
 import com.magicallibrary.app.modules.booktitle.BookTitle;
@@ -13,9 +12,8 @@ public class AddBookCopy extends InternalFlow {
 
     private BookTitle validateBookTitle() {
         System.out.println("Book's Title:");
-        String name = App.scanner.next();
-
-        if (exitFlowValidator(name)) {
+        String name = getUserInput();
+        if (name == null) {
             return null;
         };
 
@@ -31,13 +29,13 @@ public class AddBookCopy extends InternalFlow {
                 1. Yes;
                 2. No;
             """);
-            Integer response = App.scanner.nextInt();
+            Integer response = Integer.parseInt(getUserInput());
 
             if (response == 1) {
                 return createBookTitle(name);
             };
 
-            return null;
+            return validateBookTitle();
         } else {
             return results.getFirst();
         }
@@ -46,17 +44,15 @@ public class AddBookCopy extends InternalFlow {
     private BookTitle createBookTitle(String name) {
         if (name == null) {
             System.out.println("Book's Title:");
-            name = App.scanner.next();
-
-            if (exitFlowValidator(name)) {
+            name = getUserInput();
+            if (name == null) {
                 return null;
             };
         };
 
         System.out.println("Book's author");
-        String author = App.scanner.next();
-
-        if (exitFlowValidator(author)) {
+        String author = getUserInput();
+        if (author == null) {
             return null;
         };
 

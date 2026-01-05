@@ -3,7 +3,6 @@ package com.magicallibrary.app.flows.mainmenu;
 import java.util.HashMap;
 import java.util.List;
 
-import com.magicallibrary.app.App;
 import com.magicallibrary.app.modules.bookcopy.BookCopy;
 import com.magicallibrary.app.modules.bookcopy.BookCopyRepository;
 import com.magicallibrary.app.modules.borrow.Borrow;
@@ -15,18 +14,17 @@ import com.magicallibrary.app.modules.user.User;
 public class ReturnBooks extends InternalFlow {
     private Borrow searchBorrowsByCustomer() {
         System.out.println("Search borrow by customer's name or email:");
-        String name = App.scanner.next();
-
-        if (exitFlowValidator(name)) {
+        String name = getUserInput();
+        if (name == null) {
             return null;
         };
 
         HashMap<String, Object> searchParams = new HashMap<String, Object>() {{
-            put("customerSearch", "ma");
-            put("status", "all_books_borrowed");
+            put("customerSearch", name);
+            put("notStatus", "all_books_returned");
         }};
 
-        List<Object[]> results = BorrowRepository.teste(searchParams);
+        List<Object[]> results = BorrowRepository.list(searchParams);
 
         if (results.size() == 0) {
             System.out.println("And open borrow found for this customer");
@@ -79,7 +77,7 @@ public class ReturnBooks extends InternalFlow {
             put("status", "borrowed");
         }};
 
-        List<BorrowBookWithTitle> bookCopies = BorrowBookRepository.list(bookCopiesParams); 
+        List<BorrowBookWithTitle> bookCopies = BorrowBookRepository.list(bookCopiesParams);
         System.out.println("Founded borrowed books, select one option:");
 
         for (int index = 0; index < bookCopies.size(); index++) {
@@ -94,7 +92,12 @@ public class ReturnBooks extends InternalFlow {
         };
 
         try {
-            int response = Integer.parseInt(getUserInput());
+            String initialResponse = getUserInput();
+            if (initialResponse == null) {
+                return true;
+            };
+    
+            int response = Integer.parseInt(initialResponse);
 
             if (response > bookCopies.size() || response <= 0) {
                 System.out.println("Invalid choice");

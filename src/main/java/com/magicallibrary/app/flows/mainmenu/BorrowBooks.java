@@ -21,9 +21,8 @@ public class BorrowBooks extends InternalFlow {
 
     private boolean searchBookTitles() {
         System.out.println("Book's Title:");
-        String name = App.scanner.next();
-
-        if (exitFlowValidator(name)) {
+        String name = getUserInput();
+        if (name == null) {
             return true;
         };
 
@@ -62,7 +61,7 @@ public class BorrowBooks extends InternalFlow {
 
     private User searchCustomer() {
         System.out.println("Search customer by name, last name or email");
-        String search = App.scanner.next();
+        String search = getUserInput();
 
         HashMap<String, Object> searchParams = new HashMap<String, Object>() {{
             put("search", search);
@@ -80,7 +79,7 @@ public class BorrowBooks extends InternalFlow {
             };
             System.out.println(String.format("%d. Create user", results.size() + 1));
 
-            int response = App.scanner.nextInt();
+            int response = Integer.parseInt(getUserInput());
 
             if (response > results.size() + 1 || response <= 0) {
                 System.out.println("Invalid choice");
@@ -107,7 +106,7 @@ public class BorrowBooks extends InternalFlow {
 
     private User createCustomer() {
         System.out.println("Email");
-        String email = App.scanner.next();
+        String email = getUserInput();
 
         if (validateExistingCustomer(email)) {
             System.out.println("User already exists");
@@ -116,10 +115,10 @@ public class BorrowBooks extends InternalFlow {
         };
 
         System.out.println("First name");
-        String firstName = App.scanner.next();
+        String firstName = getUserInput();
 
         System.out.println("Last name");
-        String lastName = App.scanner.next();
+        String lastName = getUserInput();
 
         User newCustomer = new User(firstName, lastName, email, "customer", "");
         User newCreatedCustomer = UserRepository.create(newCustomer);
@@ -132,7 +131,6 @@ public class BorrowBooks extends InternalFlow {
         // get borrowed bookcopies (any status other then "borrowed") and limit by 1;
         // add. then to an list until user exit the recursive method;
         boolean exited = searchBookTitles();
-        
         if (exited) {
             return true;
         };

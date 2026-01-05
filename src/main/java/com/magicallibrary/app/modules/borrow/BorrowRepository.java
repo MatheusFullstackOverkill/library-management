@@ -11,7 +11,7 @@ public class BorrowRepository extends Repository {
         return baseCreate(Borrow);
     }
 
-    public static List<Object[]> teste(HashMap<String, Object> params) {
+    public static List<Object[]> list(HashMap<String, Object> params) {
         QueryStringWrapper queryStringWrapper = new QueryStringWrapper("""
             SELECT
                 b,
@@ -26,18 +26,24 @@ public class BorrowRepository extends Repository {
 
         if (params != null) {
             params.forEach((key, value) -> {
-                if (key.equals("customerSearch")) {
-                    queryStringWrapper.queryString = queryStringWrapper.queryString.concat(
-                        """
-                            AND (
-                                u.firstName ILIKE :customerSearch OR
-                                u.lastName ILIKE :customerSearch OR
-                                u.email ILIKE :customerSearch
-                            )
-                        """
-                    );
-                } else {
-                    queryStringWrapper.queryString = queryStringWrapper.queryString.concat(" AND ").concat(key).concat(" = :").concat(key);
+                switch (key) {
+                    case "customerSearch":
+                        queryStringWrapper.queryString = queryStringWrapper.queryString.concat(
+                            """
+                                AND (
+                                    u.firstName ILIKE :customerSearch OR
+                                    u.lastName ILIKE :customerSearch OR
+                                    u.email ILIKE :customerSearch
+                                )
+                            """
+                        );
+                        break;
+                    case "notStatus":
+                        queryStringWrapper.queryString = queryStringWrapper.queryString.concat(" AND status != :notStatus");
+                        break;
+                    default:
+                        queryStringWrapper.queryString = queryStringWrapper.queryString.concat(" AND ").concat(key).concat(" = :").concat(key);
+                        break;
                 };
             });
         };
@@ -47,43 +53,6 @@ public class BorrowRepository extends Repository {
         };
     
         return baseList(Object[].class, queryStringWrapper, params);
-    }
-    
-    public static List<Borrow> list(HashMap<String, Object> params) {
-        QueryStringWrapper queryStringWrapper = new QueryStringWrapper("""
-            SELECT
-                b
-            FROM 
-                Borrow b
-            LEFT JOIN User u ON b.customerId = u.id
-            WHERE
-                b.deletedAt IS NULL AND
-                u.deletedAt IS NULL
-        """);
-
-        if (params != null) {
-            params.forEach((key, value) -> {
-                if (key.equals("customerSearch")) {
-                    queryStringWrapper.queryString = queryStringWrapper.queryString.concat(
-                        """
-                            AND (
-                                u.firstName ILIKE :customerSearch OR
-                                u.lastName ILIKE :customerSearch OR
-                                u.email ILIKE :customerSearch
-                            )
-                        """
-                    );
-                } else {
-                    queryStringWrapper.queryString = queryStringWrapper.queryString.concat(" AND ").concat(key).concat(" = :").concat(key);
-                };
-            });
-        };
-
-        if (params.containsKey("customerSearch")) {
-            params.put("customerSearch", "%" + params.get("customerSearch") + "%" );
-        };
-    
-        return baseList(Borrow.class, queryStringWrapper, params);
     }
 
     public static Borrow retrieve(long id) {
