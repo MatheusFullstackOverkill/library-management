@@ -1,4 +1,4 @@
-CREATE TABLE "user" (
+CREATE TABLE IF NOT EXISTS "user" (
 	user_id serial primary key NOT NULL,
 	first_name varchar(100) NOT NULL,
 	last_name varchar(150) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE "user" (
 	deleted_at timestamp
 );
 
-CREATE TABLE "book_title" (
+CREATE TABLE IF NOT EXISTS "book_title" (
 	book_title_id serial primary key NOT NULL,
 	"name" varchar(100) NOT NULL,
 	author varchar(150) NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE "book_title" (
 	deleted_at timestamp
 );
 
-CREATE TABLE "book_copy" (
+CREATE TABLE IF NOT EXISTS "book_copy" (
     book_copy_id SERIAL PRIMARY KEY NOT NULL,
     book_title_id INT REFERENCES book_title(book_title_id),
     "status" VARCHAR(30) NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE "book_copy" (
 	deleted_at timestamp
 );
 
-CREATE TABLE borrow (
+CREATE TABLE IF NOT EXISTS borrow (
     borrow_id SERIAL PRIMARY KEY NOT NULL,
     customer_id INT REFERENCES "user"(user_id),
 	employee_id INT REFERENCES "user"(user_id),
@@ -38,7 +38,7 @@ CREATE TABLE borrow (
 	deleted_at timestamp
 );
 
-CREATE TABLE borrow_book (
+CREATE TABLE IF NOT EXISTS borrow_book (
     borrow_book_id SERIAL PRIMARY KEY NOT NULL,
     borrow_id INT REFERENCES borrow(borrow_id),
     book_copy_id INT REFERENCES book_copy(book_copy_id),

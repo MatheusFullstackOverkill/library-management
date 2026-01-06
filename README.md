@@ -23,11 +23,9 @@ The purpose of this project was to exercise Java main concepts like OOP and tech
 - A JDK version 21 or 25
 
 ## Run project steps
-- Run the docker compose file or create a PostgreSQL database by yourself
-- Run the scripts in the `src/main/resources/database.sql` file in the database
-- Create a user in database with usertype "admin", the password should be set normally, a logic for password hashing was not implemented
+- Run the docker compose file with the command `sudo docker compose up` or create a PostgreSQL database by yourself
 - Copy the `.env.example` file to an `.env` file and set the environment variables
+- Copy the `flyway-example.conf` file to an `flyway.conf` file and set the database variables
+- Run the migrations with the command `make run_migrations` in the project root
 - In the IDE of your choice, run the project
-
-## Mapped enhancements
-- Implement Flyway for migrations
+- The email and password for login can be found in the `src/main/resources/V1_2__create_admin_user.sql` file
