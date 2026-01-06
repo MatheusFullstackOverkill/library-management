@@ -17,10 +17,13 @@ The purpose of this project was to exercise Java main concepts like OOP and tech
     - JDBC
     - Hibernate
 - Maven
+- Flyway
+- Makefile
 - Environment Variables
 
 ## Project requirements
 - A JDK version 21 or 25
+- Docker compose
 
 ## Run project steps
 - Run the docker compose file with the command `sudo docker compose up` or create a PostgreSQL database by yourself
